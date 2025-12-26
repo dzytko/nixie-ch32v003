@@ -19,7 +19,7 @@ def get_git_tag():
     return run_git([GIT_EXEC, "describe", "--tags", "--abbrev=0"])
 
 def get_git_commit():
-    return run_git([GIT_EXEC, "rev-parse", "--short", "HEAD"])
+    return run_git([GIT_EXEC, "rev-parse", "HEAD"])
 
 def parse_version_from_tag(tag):
     if not tag:

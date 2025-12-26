@@ -16,17 +16,15 @@ endif ()
 set(VERSION_HEADER_DIR ${CMAKE_BINARY_DIR}/generated/include)
 set(VERSION_HEADER ${VERSION_HEADER_DIR}/version.h)
 
-add_custom_command(
-        OUTPUT ${VERSION_HEADER}
-        COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/generate_version_header.py
+add_custom_target(generate_version_header
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${VERSION_HEADER_DIR}
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/generate_version_header.py
         -o ${VERSION_HEADER}
         --git-exec ${GIT_EXECUTABLE}
-        DEPENDS ${CMAKE_SOURCE_DIR}/scripts/generate_version_header.py
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        COMMENT "Generating version header ${VERSION_HEADER}"
-        VERBATIM
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Generating version header ${VERSION_HEADER}"
+    VERBATIM
 )
-add_custom_target(generate_version_header DEPENDS ${VERSION_HEADER})
 
 add_compile_options(-O0 -g -march=rv32ec -mabi=ilp32e)
 

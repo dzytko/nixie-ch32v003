@@ -6,4 +6,5 @@
 | 0x04    | Display          | Display value <4:0> | RW   | Value to display                                   |
 | 0x05    | Voltage          | Voltage <4:0>       | RW   | Write: target voltage, <br/> Read: current voltage |
 | 0x06    | Duty             | Duty <7:0>          | RO   | Current duty cycle                                 |
+| 0x07    | Flyback ON/OFF   | Enable <0>          | RW   | Enable/disable flyback converter                   |
 

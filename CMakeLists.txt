@@ -28,7 +28,10 @@ add_custom_target(generate_version_header
 
 add_compile_options(-O0 -g -march=rv32ec -mabi=ilp32e)
 
-add_executable(ch32v003_nixie main.c)
+add_executable(ch32v003_nixie
+        main.c
+        src/i2c.c
+)
 
 add_subdirectory(lib/ch32v003fun)
 

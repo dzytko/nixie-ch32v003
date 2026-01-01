@@ -32,8 +32,9 @@ add_executable(ch32v003_nixie main.c)
 
 add_subdirectory(lib/ch32v003fun)
 
-add_dependencies(ch32v003_nixie generate_version_header)
 target_include_directories(ch32v003_nixie PRIVATE ${VERSION_HEADER_DIR})
+target_include_directories(ch32v003_nixie PRIVATE include)
+add_dependencies(ch32v003_nixie generate_version_header)
 
 target_link_libraries(
         ${CMAKE_PROJECT_NAME}

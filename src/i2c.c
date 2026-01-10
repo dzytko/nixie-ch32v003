@@ -7,6 +7,7 @@
 
 #include "ch32v003fun.h"
 #include "version.h"
+#include "flyback_driver.h"
 
 
 // TODO
@@ -84,6 +85,7 @@ static int register_read_callback(uint8_t address) {
     uint8_t value;
     register_handlers[address].read(&value);
     I2C1->DATAR = value;
+    return 0;
 }
 
 static int register_write_callback(const uint8_t address, const uint8_t value) {
@@ -95,6 +97,7 @@ static int register_write_callback(const uint8_t address, const uint8_t value) {
     }
 
     register_handlers[address].write(value);
+    return 0;
 }
 
 static void sw_version_major_register_read(uint8_t *value) {
@@ -118,23 +121,27 @@ static void display_register_write(uint8_t value) {
 }
 
 static void voltage_register_read(uint8_t *value) {
-    // TODO implement
+    flyback_get_voltage(value);
 }
 
-static void voltage_register_write(uint8_t value) {
-    // TODO implement
+static void voltage_register_write(const uint8_t value) {
+    flyback_set_voltage(value);
 }
 
 static void duty_register_read(uint8_t *value) {
-    // TODO implement
+    flyback_get_duty_percent(value);
 }
 
 static void flyback_enable_register_read(uint8_t *value) {
-    // TODO implement
+    *value = flyback_is_running();
 }
 
 static void flyback_enable_register_write(uint8_t value) {
-    // TODO implement
+    if (value && !flyback_is_running()) {
+        flyback_start();
+    } else if (!value && flyback_is_running()) {
+        flyback_stop();
+    }
 }
 
 
@@ -235,10 +242,11 @@ int i2c_init(void) {
 
     I2C1->OADDR1 = address << 1;
 
-    // enable peripheral
-    I2C1->CTLR1 |= I2C_CTLR1_PE;
     // enable auto ack
     I2C1->CTLR1 |= I2C_CTLR1_ACK;
+
+    // enable peripheral
+    I2C1->CTLR1 |= I2C_CTLR1_PE;
 
     return 0;
 }

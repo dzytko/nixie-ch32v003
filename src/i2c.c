@@ -11,7 +11,7 @@
 
 
 // TODO
-#define I2C_BASE_ADDRESS 0x00 // 0b0000xxx  , bits xxx are set by gpio
+#define I2C_BASE_ADDRESS 0x10 // 0b0010xxx  , bits xxx are set by gpio
 
 
 typedef void (*register_read_handler_t)(uint8_t *value);

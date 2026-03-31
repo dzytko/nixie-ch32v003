@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 static const float adc_vref = 3.3f;
-static const uint8_t divider_ratio = 41;
+static const uint8_t divider_ratio = 61;
 
 static inline uint8_t adc_count_to_voltage(const uint16_t adc_value) {
     const float voltage = ((float) adc_value / 1024.0f) * adc_vref * divider_ratio;

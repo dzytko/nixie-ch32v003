@@ -1,10 +1,22 @@
 #include <stdlib.h>
 #include <stdint.h>
-#include <errno.h>
 
+#include "flyback_driver.h"
 #include "i2c.h"
 
 
 int main(void) {
-    return 0;
+    int ret = i2c_init();
+    while (ret < 0) {
+        (void)0;
+    }
+
+    ret = flyback_init();
+    while (ret < 0) {
+        (void)0;
+    }
+
+    while (1) {
+
+    }
 }

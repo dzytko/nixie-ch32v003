@@ -242,11 +242,11 @@ int i2c_init(void) {
 
     I2C1->OADDR1 = address << 1;
 
-    // enable auto ack
-    I2C1->CTLR1 |= I2C_CTLR1_ACK;
-
     // enable peripheral
     I2C1->CTLR1 |= I2C_CTLR1_PE;
+
+    // enable auto ack
+    I2C1->CTLR1 |= I2C_CTLR1_ACK;
 
     return 0;
 }

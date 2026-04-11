@@ -26,7 +26,7 @@ add_custom_target(generate_version_header
     VERBATIM
 )
 
-add_compile_options(-O0 -g -march=rv32ec -mabi=ilp32e)
+add_compile_options(-Og -g -march=rv32ec -mabi=ilp32e)
 
 add_executable(ch32v003_nixie
         main.c

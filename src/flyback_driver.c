@@ -11,7 +11,6 @@ static const uint8_t max_duty = 255;
 
 struct pid_pid flyback_pid;
 uint8_t adc_count_setpoint;
-uint16_t adc_buffer;
 uint16_t current_duty;
 
 
@@ -57,9 +56,14 @@ static int init_adc(void) {
     }
     ADC1->CTLR2 &= ~ADC_ADON;
 
-    // ADC Scan mode, discontinuous mode
-    ADC1->CTLR1 |= ADC_DISCEN;
-    ADC1->CTLR1 |= ADC_SCAN;
+    ADC1->CTLR1 |=
+        ADC_SCAN | // scan mode
+        ADC_JAUTO; // automatic injected group conversion
+
+
+    // enable end of conversion interrupt
+    ADC1->CTLR1 |= ADC_EOCIE;
+
 
 #define SAMPLE_TIME (0x2)  // 15 cycles
     ADC1->SAMPTR2 =
@@ -68,22 +72,16 @@ static int init_adc(void) {
     ADC1->RSQR1 |= 0x0 << 20; // L = 1 conversion
     ADC1->RSQR3 |= 4 << 0;
 
-    // 16 bit mem, 16 bit peri, mem inc, circular mode
-    // DMA1_Channel1->CFGR |=
-    //         DMA_CFGR1_MSIZE_0 |
-    //         DMA_CFGR1_PSIZE_0 |
-    //         DMA_CFGR1_MINC |
-    //         DMA_CFGR1_CIRC;
-    // DMA1_Channel1->CNTR = 1; // transfer 1 channel
-    // DMA1_Channel1->PADDR = (uint32_t) &ADC1->RDATAR;
-    // DMA1_Channel1->MADDR = (uint32_t) &adc_buffer;
-    //
-    // DMA1_Channel1->CFGR |= DMA_CFGR1_EN;
+    // i have no idea why i can only start that stupid adc via sw trigger,
+    // according to datasheet it should start on ADC_ON, but doesn't, so here we are
     ADC1->CTLR2 |=
-            ADC_EXTSEL_0 | // Timer1 CC1
-            ADC_EXTTRIG | // enable external trigger
-            // ADC_DMA |
-            ADC_ADON;
+        ADC_CONT | // continuous conversion mode
+        ADC_EXTTRIG | // enable external trigger
+        ADC_EXTSEL_0 | ADC_EXTSEL_1 | ADC_EXTSEL_2 | // set SWSTART as trigger source
+        ADC_SWSTART | // start conversion
+        ADC_ADON; // turn on ADC
+
+    NVIC_EnableIRQ(ADC_IRQn);
 
     return 0;
 }
@@ -135,11 +133,13 @@ static int init_timer(void) {
 }
 
 
-__attribute__((interrupt)) void ADC1_IRQHandler() {
+__attribute__((interrupt)) void ADC1_IRQHandler(void) {
+    const uint16_t adc_count = ADC1->RDATAR & 0xFFF;
+
     current_duty = (uint16_t) pid_update(
         &flyback_pid,
         adc_count_setpoint,
-        adc_buffer
+        adc_count
     );
 
     if (current_duty > max_duty) {

@@ -32,6 +32,7 @@ add_executable(ch32v003_nixie
         main.c
         src/i2c.c
         src/pid.c
+        src/display.c
         src/flyback_driver.c
 )
 

@@ -29,10 +29,12 @@ static void calc_presc_reload(
 }
 
 static int init_adc(void) {
-    funPinMode(PD3, GPIO_CFGLR_IN_PUPD); // CH4
+    RCC->APB2PCENR |=
+        RCC_APB2Periph_ADC1 | // enable ADC
+        RCC_APB2Periph_GPIOD; // enable GPIOD
 
-    // enable ADC
-    RCC->APB2PCENR |= RCC_APB2Periph_ADC1;
+    funPinMode(PD3, GPIO_CFGLR_IN_ANALOG); // CH4
+
 
     // enable DMA
     // RCC->AHBPCENR |= RCC_AHBPeriph_DMA1;
@@ -87,13 +89,12 @@ static int init_adc(void) {
 }
 
 static int init_timer(void) {
-    funPinMode(PD2, GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF);
-
     RCC->APB2PCENR |=
-            RCC_APB2Periph_GPIOC |
             RCC_APB2Periph_GPIOD |
             RCC_APB2Periph_TIM1 |
             RCC_APB2Periph_AFIO;
+
+    funPinMode(PD2, GPIO_Speed_10MHz | GPIO_CNF_OUT_PP_AF);
 
     // reset TIM1 to init all regs
     RCC->APB2PRSTR |= RCC_APB2Periph_TIM1;

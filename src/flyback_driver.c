@@ -161,6 +161,8 @@ int flyback_init(void) {
         return res;
     }
 
+    flyback_stop();
+
     flyback_pid.k_p = 0.1f;
     flyback_pid.k_i = 0.001f;
     flyback_pid.k_d = 0.000f;

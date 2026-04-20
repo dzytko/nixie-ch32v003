@@ -67,7 +67,7 @@ static int init_adc(void) {
     ADC1->CTLR1 |= ADC_EOCIE;
 
 
-#define SAMPLE_TIME (0x2)  // 15 cycles
+#define SAMPLE_TIME (0x7)  // 241 cycles
     ADC1->SAMPTR2 =
             SAMPLE_TIME << (4 * 3);
 

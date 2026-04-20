@@ -7,10 +7,10 @@
 #include "utils.h"
 
 
-static const uint8_t max_duty = 255;
+static const uint16_t max_duty = 15;
 
 struct pid_pid flyback_pid;
-uint8_t adc_count_setpoint;
+uint16_t adc_count_setpoint;
 uint16_t current_duty;
 
 

@@ -239,9 +239,7 @@ int i2c_init(void) {
     I2C1->CTLR2 |= I2C_CTLR2_ITBUFEN | I2C_CTLR2_ITEVTEN | I2C_CTLR2_ITERREN;
 
     NVIC_EnableIRQ(I2C1_EV_IRQn); // event interrupt
-    NVIC_SetPriority(I2C1_EV_IRQn, 2 << 4);
     NVIC_EnableIRQ(I2C1_ER_IRQn); // error interrupt
-    NVIC_SetPriority(I2C1_ER_IRQn, 2 << 4);
 
     // set i2c clock frequency
     const uint32_t clockrate = 100 * 1000;

@@ -94,7 +94,7 @@ static int register_read_callback(uint8_t address) {
     return 0;
 }
 
-static int register_write_callback(const uint8_t address, const uint8_t value) {
+static int register_write_callback(uint8_t address, const uint8_t value) {
     address--; // addresses are 1 based, but register_handlers is 0 based
 
     if (address >= sizeof(register_handlers) / sizeof(register_handlers[0])) {
@@ -150,7 +150,7 @@ static void flyback_enable_register_read(uint8_t *value) {
     *value = flyback_is_running();
 }
 
-static void flyback_enable_register_write(uint8_t value) {
+static void flyback_enable_register_write(const uint8_t value) {
     if (value && !flyback_is_running()) {
         flyback_start();
     } else if (!value && flyback_is_running()) {

@@ -76,6 +76,8 @@ static int get_address(uint8_t *value) {
 }
 
 static int register_read_callback(uint8_t address) {
+    address--; // addresses are 1 based, but register_handlers is 0 based
+
     if (address >= sizeof(register_handlers) / sizeof(register_handlers[0])) {
         I2C1->DATAR = 0;
         return -ENOMEM;
@@ -93,6 +95,8 @@ static int register_read_callback(uint8_t address) {
 }
 
 static int register_write_callback(const uint8_t address, const uint8_t value) {
+    address--; // addresses are 1 based, but register_handlers is 0 based
+
     if (address >= sizeof(register_handlers) / sizeof(register_handlers[0])) {
         return -ENOMEM;
     }

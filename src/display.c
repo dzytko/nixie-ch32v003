@@ -4,6 +4,7 @@
 
 #include "ch32v003fun.h"
 
+static uint8_t displayed_digit = 0xff;
 
 static const uint8_t digit_to_pin[] = {
     PA1, // 0
@@ -27,7 +28,13 @@ int display_write(const uint8_t digit) {
     display_clear();
 
     funDigitalWrite(digit_to_pin[digit], 1);
+    displayed_digit = digit;
 
+    return 0;
+}
+
+int get_displayed_digit(uint8_t *digit) {
+    *digit = displayed_digit;
     return 0;
 }
 
@@ -35,6 +42,8 @@ int display_clear(void) {
     for (uint8_t i = 0; i < sizeof(digit_to_pin); i++) {
         funDigitalWrite(digit_to_pin[i], 0);
     }
+
+    displayed_digit = 0xff;
 
     return 0;
 }

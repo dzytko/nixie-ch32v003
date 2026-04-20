@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #include "ch32v003fun.h"
+#include "display.h"
 #include "version.h"
 #include "flyback_driver.h"
 
@@ -29,6 +30,8 @@ static void display_register_read(uint8_t *value);
 
 static void display_register_write(uint8_t value);
 
+static void display_clear_register_write(uint8_t value);
+
 static void voltage_register_read(uint8_t *value);
 
 static void voltage_register_write(uint8_t value);
@@ -51,11 +54,12 @@ struct i2c_slave_state {
 };
 
 
-static struct register_handlers register_handlers[7] = {
+static struct register_handlers register_handlers[9] = {
     {sw_version_major_register_read, NULL},
     {sw_version_minor_register_read, NULL},
     {sw_version_patch_register_read, NULL},
     {display_register_read, display_register_write},
+    {NULL, display_clear_register_write},
     {voltage_register_read, voltage_register_write},
     {duty_register_read, NULL},
     {flyback_enable_register_read, flyback_enable_register_write},
@@ -113,11 +117,17 @@ static void sw_version_patch_register_read(uint8_t *value) {
 }
 
 static void display_register_read(uint8_t *value) {
-    // TODO implement
+    get_displayed_digit(value);
 }
 
-static void display_register_write(uint8_t value) {
-    // TODO implement
+static void display_register_write(const uint8_t value) {
+    display_write(value);
+}
+
+static void display_clear_register_write(const uint8_t value) {
+    if (value) {
+        display_clear();
+    }
 }
 
 static void voltage_register_read(uint8_t *value) {

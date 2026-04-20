@@ -82,6 +82,7 @@ static int init_adc(void) {
         ADC_EXTSEL_0 | ADC_EXTSEL_1 | ADC_EXTSEL_2; // set SWSTART as trigger source
 
     NVIC_EnableIRQ(ADC_IRQn);
+    NVIC_SetPriority(ADC_IRQn, 2 << 6);
 
     return 0;
 }

@@ -79,9 +79,7 @@ static int init_adc(void) {
     ADC1->CTLR2 |=
         ADC_CONT | // continuous conversion mode
         ADC_EXTTRIG | // enable external trigger
-        ADC_EXTSEL_0 | ADC_EXTSEL_1 | ADC_EXTSEL_2 | // set SWSTART as trigger source
-        ADC_SWSTART | // start conversion
-        ADC_ADON; // turn on ADC
+        ADC_EXTSEL_0 | ADC_EXTSEL_1 | ADC_EXTSEL_2; // set SWSTART as trigger source
 
     NVIC_EnableIRQ(ADC_IRQn);
 
@@ -182,11 +180,13 @@ int flyback_init(void) {
 int flyback_start(void) {
     pid_init(&flyback_pid);
     TIM1->BDTR |= TIM_MOE;
+    ADC1->CTLR2 |= ADC_SWSTART | ADC_ADON;
     return 0;
 }
 
 int flyback_stop(void) {
     TIM1->BDTR &= ~TIM_MOE;
+    ADC1->CTLR2 &= ~(ADC_SWSTART | ADC_ADON);
     return 0;
 }
 

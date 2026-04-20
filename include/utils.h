@@ -12,7 +12,7 @@ static inline uint8_t adc_count_to_voltage(const uint16_t adc_value) {
 }
 
 static inline uint16_t voltage_to_adc_count(const uint8_t voltage) {
-    const float adc_value = (voltage / divider_ratio) / adc_vref * 1024.0f;
+    const float adc_value = voltage * 1024.0f / divider_ratio / adc_vref;
     return (uint16_t) adc_value;
 }
 

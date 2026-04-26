@@ -198,7 +198,7 @@ int flyback_is_running(void) {
 }
 
 int flyback_get_voltage(uint8_t *voltage) {
-    *voltage = adc_count_to_voltage(adc_count_setpoint);
+    *voltage = adc_count_to_voltage(ADC1->RDATAR & 0xFFF);
     return 0;
 }
 

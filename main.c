@@ -4,6 +4,7 @@
 #include "ch32v003fun.h"
 #include "flyback_driver.h"
 #include "i2c.h"
+#include "display.h"
 
 
 int main(void) {
@@ -11,7 +12,12 @@ int main(void) {
     intsyscr |= 1 << 1; // enable interrupt nesting
     __set_INTSYSCR(intsyscr);
 
-    int ret = i2c_init();
+    int ret = display_init();
+    while (ret < 0) {
+        (void)0;
+    }
+
+    ret = i2c_init();
     while (ret < 0) {
         (void)0;
     }

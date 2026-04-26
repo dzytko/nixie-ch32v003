@@ -3,9 +3,11 @@
 
 #include <stdint.h>
 
+int display_init(void);
+
 int display_write(uint8_t digit);
 
-int get_displayed_digit(uint8_t *digit);
+int display_get_displayed_digit(uint8_t *digit);
 
 int display_clear(void);
 

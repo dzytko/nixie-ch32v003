@@ -121,7 +121,7 @@ static void sw_version_patch_register_read(uint8_t *value) {
 }
 
 static void display_register_read(uint8_t *value) {
-    get_displayed_digit(value);
+    display_get_displayed_digit(value);
 }
 
 static void display_register_write(const uint8_t value) {

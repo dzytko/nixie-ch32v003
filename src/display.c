@@ -20,6 +20,19 @@ static const uint8_t digit_to_pin[] = {
 };
 
 
+int display_init(void) {
+    RCC->APB2PCENR |=
+        RCC_APB2Periph_GPIOA |
+        RCC_APB2Periph_GPIOC |
+        RCC_APB2Periph_GPIOD;
+
+    for (uint8_t i = 0; i < (uint8_t)sizeof(digit_to_pin); i++) {
+            funPinMode(digit_to_pin[i], GPIO_Speed_10MHz | GPIO_CNF_OUT_PP);
+    }
+
+    return 0;
+}
+
 int display_write(const uint8_t digit) {
     if (digit > 9) {
         return -EINVAL;
@@ -33,7 +46,7 @@ int display_write(const uint8_t digit) {
     return 0;
 }
 
-int get_displayed_digit(uint8_t *digit) {
+int display_get_displayed_digit(uint8_t *digit) {
     *digit = displayed_digit;
     return 0;
 }

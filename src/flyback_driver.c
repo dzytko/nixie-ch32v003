@@ -9,9 +9,9 @@
 
 static const uint16_t max_duty = 15;
 
-struct pid_pid flyback_pid;
-uint16_t adc_count_setpoint;
-uint16_t current_duty;
+static struct pid_pid flyback_pid;
+static uint16_t adc_count_setpoint;
+static uint16_t current_duty;
 
 
 static void calc_presc_reload(

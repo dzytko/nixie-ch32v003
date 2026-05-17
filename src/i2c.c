@@ -70,8 +70,8 @@ static struct i2c_slave_state i2c_slave_state;
 
 static int get_address(uint8_t *value) {
     uint8_t address = 0;
-    address |= GPIOC->INDR & 0x07 << 5;
-    *value = (I2C_BASE_ADDRESS & ~0x07) | address;
+    address |= GPIOC->INDR >> 5 & 0x07;
+    *value = I2C_BASE_ADDRESS & ~0x07 | address;
     return 0;
 }
 
@@ -217,9 +217,9 @@ int i2c_init(void) {
     funGpioInitC();
     funPinMode(PC1, GPIO_Speed_10MHz | GPIO_CNF_OUT_OD_AF); // SDA
     funPinMode(PC2, GPIO_Speed_10MHz | GPIO_CNF_OUT_OD_AF); // SCL
-    funPinMode(PC5, GPIO_Speed_10MHz | GPIO_CNF_IN_PUPD); // ADDR0
-    funPinMode(PC6, GPIO_Speed_10MHz | GPIO_CNF_IN_PUPD); // ADDR1
-    funPinMode(PC7, GPIO_Speed_10MHz | GPIO_CNF_IN_PUPD); // ADDR2
+    funPinMode(PC5, GPIO_CNF_IN_PUPD); // ADDR0
+    funPinMode(PC6, GPIO_CNF_IN_PUPD); // ADDR1
+    funPinMode(PC7, GPIO_CNF_IN_PUPD); // ADDR2
 
     GPIOC->OUTDR |= 1 << 5 | 1 << 6 | 1 << 7; // address pullups
     // GPIOC->OUTDR |= 1 << 1 | 1 << 2; // i2c pullups
